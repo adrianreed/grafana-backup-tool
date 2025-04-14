@@ -515,6 +515,10 @@ def send_grafana_get(url, http_get_headers, verify_ssl, client_cert, debug):
                      verify=verify_ssl, cert=client_cert)
     if debug:
         log_response(r)
+    
+    # Grafana 5.0.0 and later returns a 404 when the endpoint does not exist instead of an empty array
+    if r.status_code == 404:
+        return (r.status_code, [])
     return (r.status_code, r.json())
 
 
